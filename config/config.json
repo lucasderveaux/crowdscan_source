@@ -22,7 +22,8 @@
             "topic":"/gent/gent_langemunt",
             "username":"opendata",
             "usesImportPages":true,
-            "importInterval": 5000
+            "importInterval": 5000,
+            "observationsPerPage":100
         },
         {
             "route": "/sensors",

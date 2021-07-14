@@ -59,7 +59,7 @@ export class mySource extends Source {
         quad(
           namedNode('http://crowdscan.be/ns/ObservationShape'),
           namedNode('http://www.w3.org/ns/shacl#targetClass'),
-          namedNode('https://crowdscan.be/id/observation/')
+          namedNode('http://www.w3.org/ns/sosa/Observation')
         )
       );
       

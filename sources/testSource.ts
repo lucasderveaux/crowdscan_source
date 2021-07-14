@@ -235,47 +235,130 @@ export class mySource extends Source {
       quad(
         namedNode('http://crowdscan.be/ns/ObservationShape'),
         namedNode('http://www.w3.org/ns/shacl#targetClass'),
-        namedNode('http://www.w3.org/ns/sosa/Observation')
+        namedNode('https://crowdscan.be/id/observation/')
       )
     );
-    triples.push(
-      quad(
-        namedNode('http://crowdscan.be/ns/ObservationShape'),
-        namedNode('http://www.w3.org/ns/shacl#property'),
-        blankNode('o')
-      )
-    );
+    
 
     //sh: 	http://www.w3.org/ns/shacl#
 
     //hasFeatureOfInterest
     triples.push(
       quad(
-        blankNode('o'),
+        namedNode('http://crowdscan.be/ns/ObservationShape'),
+        namedNode('http://www.w3.org/ns/shacl#property'),
+        blankNode('FOF')
+      )
+    );
+    triples.push(
+      quad(
+        blankNode('FOF'),
         namedNode('http://www.w3.org/ns/shacl#path'),
         namedNode('http://www.w3.org/ns/sosa/hasFeatureOfInterest')
       )
     );
     triples.push(
       quad(
-        blankNode('o'),
+        blankNode('FOF'),
         namedNode('	http://www.w3.org/ns/shacl#maxCount'),
         literal('1','http://www.w3.org/2001/XMLSchema#integer')
       )
     );
     triples.push(
       quad(
-        blankNode('o'),
-        namedNode('	http://www.w3.org/ns/shacl#minCount'),
+        blankNode('FOF'),
+        namedNode('http://www.w3.org/ns/shacl#minCount'),
         literal('1','http://www.w3.org/2001/XMLSchema#integer')
       )
     );
+        //verwijst naar andere node
+    triples.push(
+      quad(
+        blankNode('FOF'),
+        namedNode('http://www.w3.org/ns/shacl#nodeKind'),
+        namedNode('http://www.w3.org/ns/shacl#IRI')
+      )
+    );
+
     
     //observedProperty
+    triples.push(
+      quad(
+        namedNode('http://crowdscan.be/ns/ObservationShape'),
+        namedNode('http://www.w3.org/ns/shacl#property'),
+        blankNode('OP')
+      )
+    );
+    triples.push(
+      quad(
+        blankNode('OP'),
+        namedNode('http://www.w3.org/ns/shacl#path'),
+        namedNode('http://www.w3.org/ns/sosa/observedProperty')
+      )
+    );
+    triples.push(
+      quad(
+        blankNode('OP'),
+        namedNode('	http://www.w3.org/ns/shacl#maxCount'),
+        literal('1','http://www.w3.org/2001/XMLSchema#integer')
+      )
+    );
+    triples.push(
+      quad(
+        blankNode('OP'),
+        namedNode('http://www.w3.org/ns/shacl#minCount'),
+        literal('1','http://www.w3.org/2001/XMLSchema#integer')
+      )
+    );
+        //verwijst naar andere node
+    triples.push(
+      quad(
+        blankNode('OP'),
+        namedNode('http://www.w3.org/ns/shacl#nodeKind'),
+        namedNode('http://www.w3.org/ns/shacl#IRI')
+      )
+    );
     //resultTime
+
     //hasSimpleResult
     //phenomenonTime
     //madeBySensor
+    triples.push(
+      quad(
+        namedNode('http://crowdscan.be/ns/ObservationShape'),
+        namedNode('http://www.w3.org/ns/shacl#property'),
+        blankNode('MBS')
+      )
+    );
+    triples.push(
+      quad(
+        blankNode('MBS'),
+        namedNode('http://www.w3.org/ns/shacl#path'),
+        namedNode('http://www.w3.org/ns/sosa/madeBySensor')
+      )
+    );
+    triples.push(
+      quad(
+        blankNode('MBS'),
+        namedNode('	http://www.w3.org/ns/shacl#maxCount'),
+        literal('1','http://www.w3.org/2001/XMLSchema#integer')
+      )
+    );
+    triples.push(
+      quad(
+        blankNode('MBS'),
+        namedNode('http://www.w3.org/ns/shacl#minCount'),
+        literal('1','http://www.w3.org/2001/XMLSchema#integer')
+      )
+    );
+        //verwijst naar andere node
+    triples.push(
+      quad(
+        blankNode('MBS'),
+        namedNode('http://www.w3.org/ns/shacl#nodeKind'),
+        namedNode('http://www.w3.org/ns/shacl#IRI')
+      )
+    );
     
 
 

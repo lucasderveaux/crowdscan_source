@@ -23,7 +23,7 @@
             "username":"opendata",
             "usesImportPages":true,
             "importInterval": 5000,
-            "observationsPerPage":100
+            "observationsPerPage":800
         },
         {
             "route": "/sensors",

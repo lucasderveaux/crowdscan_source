@@ -142,6 +142,20 @@ export class mySource extends Source {
         namedNode('http://crowdscan.be/ns/GeoShape')
       )
     );
+    triples.push(
+      quad(
+        blankNode('g'),
+        namedNode('http://www.w3.org/ns/shacl#nodeKind'),
+        namedNode('http://www.w3.org/ns/shacl#BlankNode')
+      )
+    );
+    triples.push(
+      quad(
+        blankNode('g'),
+        namedNode('http://www.w3.org/ns/shacl#class'),
+        namedNode('http://www.w3.org/ns/locn#Geometry')
+      )
+    );
     //GeoShape
     triples.push(
       quad(

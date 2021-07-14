@@ -5,31 +5,26 @@
     "db": {
         "host": "C:/GitHub/Basic-LDES-Server-Examples/database.sqlite"
     },
-    "sources" : [ 
-        
-        {
-            "route": "/test",
-            "sourceFile": "dist/testSource",
-            "entrypoint": "https://apidg.gent.be/opendata/adlib2eventstream/v1/dmg/objecten",
-            "queryparam": "generatedAtTime"
-        },
+    "sources": [
         {
             "route": "/crowdscan",
             "sourceFile": "dist/crowdscanSource",
             "entrypoint": "data.crowdscan.be",
             "sensors": 1,
             "environment": "gent_langemunt",
-            "topic":"/gent/gent_langemunt",
-            "username":"opendata",
-            "usesImportPages":true,
+            "topic": "/gent/gent_langemunt",
+            "username": "opendata",
+            "usesImportPages": true,
             "importInterval": 5000,
-            "observationsPerPage":800
+            "observationsPerPage": 800
         },
         {
             "route": "/sensors",
-            "sourceFile": "dist/sensorsource",
-            "entrypoint": "https://apidg.gent.be/opendata/adlib2eventstream/v1/dmg/objecten",
-            "queryparam": "generatedAtTime"
+            "sourceFile": "dist/sensorsource"
+        },
+        {
+            "route":"/catalog",
+            "sourceFile":"dist/catalogSource"
         }
     ]
 }

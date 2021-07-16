@@ -1,6 +1,4 @@
 # crowdscan_source
-##Usage
-### yarn
 The crowdscan source is an implementation of the Basic LDES server.
 The source subscribes to a MQTT data broker and transforms the data to a Linked Data Event Stream.
 

@@ -41,6 +41,7 @@ Afterwards you can change the configuration file in order to subscribe to the ri
     ]
 }
 ```
+An example of this can be found here: [ExampleConfigFile](http://github.com/lucasderveaux/crowdscan_source/config/config.json)
 ### Development
 ```
 yarn run start

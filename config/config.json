@@ -1,6 +1,6 @@
 {
     "app": {
-        "port": 30006
+        "port": 3000
     },
     "db": {
         "host": "C:/GitHub/Basic-LDES-Server-Examples/database.sqlite"
@@ -9,14 +9,12 @@
         {
             "route": "/langemunt",
             "sourceFile": "dist/crowdscanSource",
-            "entrypoint": "data.crowdscan.be",
-            "sensors": 1,
+            "usesImportPages": true,
+            "importInterval": 5000,
             "environment": "gent_langemunt",
             "topic": "/gent/gent_langemunt",
             "username": "opendata",
-            "usesImportPages": true,
-            "importInterval": 5000,
-            "observationsPerPage": 800
+            "observationsPerPage": 100
         },
         {
             "route": "/sensors",

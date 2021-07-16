@@ -529,7 +529,7 @@ evenStream notatie
     let client = mqtt.connect(
       'mqtt://data.crowdscan.be', {
       username: this.config['username'],
-      password: process.env.CR
+      password: process.env.CREDENTIALS
     }, (err: any) => {
       if (err) console.log("er is een error" + err.message);
     }

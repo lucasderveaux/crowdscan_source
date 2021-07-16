@@ -4,7 +4,7 @@ The source subscribes to a MQTT data broker and transforms the data to a Linked 
 
 In order to use this implementation of the crowdscan source, you have to add a .env file with the right credentials to subscribe to the topic of your choosing. The .env file will look like:
 ```
-CR=<credentials>
+CREDENTIALS=<credentials>
 ```
 Afterwards you can change the configuration file in order to subscribe to the right topic.
 

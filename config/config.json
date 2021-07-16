@@ -7,7 +7,7 @@
     },
     "sources": [
         {
-            "route": "/crowdscan",
+            "route": "/langemunt",
             "sourceFile": "dist/crowdscanSource",
             "entrypoint": "data.crowdscan.be",
             "sensors": 1,

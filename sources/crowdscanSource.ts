@@ -451,12 +451,12 @@ evenStream notatie
         quad(
           namedNode('https://production.crowdscan.be/dataapi/gent/environments/evenstream'),
           namedNode('https://w3id.org/tree#view'),
-          namedNode('https://localhost:3000/crowdscan/' + this.hoeveelheid)
+          namedNode('https://localhost:3000/langemunt/' + this.hoeveelheid)
         )
       );
       rdf.push(
         quad(
-          namedNode('https://localhost:3000/crowdscan/' + this.hoeveelheid),
+          namedNode('https://localhost:3000/langemunt/' + this.hoeveelheid),
           namedNode('https://w3id.org/tree#relation'),
           blankNode('r' + this.hoeveelheid)
         )
@@ -492,7 +492,7 @@ evenStream notatie
         quad(
           blankNode('r' + this.hoeveelheid),
           namedNode('https://w3id.org/tree#node'),
-          namedNode('https://localhost:3000/crowdscan/' + (this.hoeveelheid + 1))
+          namedNode('https://localhost:3000/langemunt/' + (this.hoeveelheid + 1))
         )
       );
     }
@@ -545,7 +545,6 @@ evenStream notatie
     client.on('message', function (topic: string, message: string, packet: any) {
       tijd = new Date(JSON.parse(message)['header']['time']);
       rdf = cr.makeObservation(message);
-
 
       let val = Buffer.from(JSON.stringify(rdf));
       r.read = function () {

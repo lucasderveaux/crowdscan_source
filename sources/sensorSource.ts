@@ -336,7 +336,7 @@ export class mySource extends Source {
     triples.push(
       quad(
         blankNode('loc'),
-        namedNode('http://www.opengis.net/ont/geosparql#'),
+        namedNode('http://www.opengis.net/ont/geosparql#asWKT'),
         literal('<http://www.opengis.net/def/crs/OGC/1.3/CRS84> MULTILINESTRING(3.722529868069784 51.0558306603255,3.7227900423442284 51.055989138119095,3.7232138313685814 51.05633306678402,3.7234531765417023 51.05656270707058,3.723467216505414 51.05655720363685,3.7232311821121034 51.05632960517266,3.722983077778226 51.05611886485648,3.722796837235518 51.055970636405476,3.722544709588118 51.05582058823546,3.722529868069784 51.0558306603255)',
           namedNode('http://www.opengis.net/ont/geosparql#wktLiteral'))
       )

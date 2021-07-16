@@ -30,7 +30,7 @@ export class mySource extends Source {
       quad(
         blankNode('catalog'),
         namedNode('http://purl.org/dc/terms/title'),
-        literal('Catalog for Crowdscan Data in the Langemunt in Ghent', 'en')
+        literal('Catalog for Crowdscan Data', 'en')
       )
     );
 
@@ -62,7 +62,7 @@ export class mySource extends Source {
       quad(
         blankNode('dataset-sensors'),
         namedNode('http://purl.org/dc/terms/title'),
-        literal('Dataset for the sensors and feature of interest in the Langemunt in Ghent', 'en')
+        literal('Dataset for crowdscans\' sensors and feature of interest', 'en')
       )
     );
 
@@ -145,7 +145,7 @@ export class mySource extends Source {
       quad(
         blankNode('dataset-observation-distribution'),
         namedNode('http://purl.org/dc/terms/accessURL'),
-        literal('http://localhost:3000/crowdscan/1', namedNode('http://www.w3.org/2001/XMLSchema#anyURI'))
+        literal('http://localhost:3000/langemunt/1', namedNode('http://www.w3.org/2001/XMLSchema#anyURI'))
       )
     );
 

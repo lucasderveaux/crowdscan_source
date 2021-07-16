@@ -1,9 +1,14 @@
 # crowdscan_source
 ##Usage
 ### yarn
+The crowdscan source is an implementation of the Basic LDES server.
+The source subscribes to a MQTT data broker and transforms the data to a Linked Data Event Stream.
+
+In order to use this implementation of the crowdscan source, you have to add a .env file with the right credentials to subscribe to the topic of your choosing. The .env file will look like:
 ```
-yarn run start
+CR=<credentials>
 ```
+Afterwards you can change the configuration file in order to subscribe to the right topic.
 
 ### Config file
 ``` json
@@ -38,36 +43,7 @@ yarn run start
     ]
 }
 ```
-##### example
-``` json
-{
-    "app": {
-        "port": 3000
-    },
-    "db": {
-        "host": "C:/GitHub/Basic-LDES-Server-Examples/database.sqlite"
-    },
-    "sources": [
-        {
-            "route": "/langemunt",
-            "sourceFile": "dist/crowdscanSource",
-            "usesImportPages": true,
-            "importInterval": 5000,
-            "environment": "gent_langemunt",
-            "topic": "/gent/gent_langemunt",
-            "username": "opendata",
-            "observationsPerPage": 800
-        },
-        {
-            "route": "/sensors",
-            "sourceFile": "dist/sensorsource"
-        },
-        {
-            "route":"/catalog",
-            "sourceFile":"dist/catalogSource"
-        }
-    ]
-}
+### Development
 ```
-
-
+yarn run start
+```

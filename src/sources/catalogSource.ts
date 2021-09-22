@@ -1,22 +1,30 @@
 import { Source, Page } from '@treecg/basic-ldes-server';
 import type * as RDF from 'rdf-js';
 import { literal, namedNode, blankNode, quad } from '@rdfjs/data-model';
+import { DatabaseFactory } from '../models/DatabaseFactory';
+import * as RdfString from "rdf-string";
+import { crowdscanSource } from './crowdscanSource';
+import interpreterInstance from './Interpreter/InterpreterInstance';
+import IInterpreter from './Interpreter/IInterpreter';
 
-export class mySource extends Source {
+export class mySource extends crowdscanSource {
 
   protected config: object;
-  hoeveelheid: number;
+  interpreter: IInterpreter;
 
-  constructor(config: object) {
-    super(config);
+  constructor(config: object, instance: interpreterInstance) {
+    super(config, instance);
+    this.instance.appendCatalog(this);
   }
 
-  async getPage(id: any): Page {
+  setInterpreter(interpreter: IInterpreter) {
+    this.interpreter = interpreter;
+  }
+
+  async createPages(): Promise<void> {
     let triples: RDF.Quad[];
     triples = [];
-
-    let x = Date.now();
-    let date = new Date(x);
+    let date = new Date(Date.now());
 
     triples.push(
       quad(
@@ -149,10 +157,9 @@ export class mySource extends Source {
       )
     );
 
-    const p = new Page(triples, []);
-    return p;
-
+    await this.importPageWithoutIndex(new Page(triples, []));
   }
+
 
 }
 

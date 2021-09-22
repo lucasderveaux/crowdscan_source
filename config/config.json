@@ -3,26 +3,35 @@
         "port": 3000
     },
     "db": {
-        "host": "C:/GitHub/Basic-LDES-Server-Examples/database.sqlite"
+        "host": "C:/GitHub/Basic-LDES-Server-Examples/database.sqlite",
+        "maxCount":10000000
     },
     "sources": [
         {
-            "route": "/langemunt",
-            "sourceFile": "dist/crowdscanSource",
-            "usesImportPages": true,
-            "importInterval": 5000,
+            "route": "/feed/langemunt/observations",
+            "sourceFile": "dist/sources/observationSource",
             "environment": "gent_langemunt",
             "topic": "/gent/gent_langemunt",
             "username": "opendata",
-            "observationsPerPage": 100
+            "observationsPerPage":60
         },
         {
-            "route": "/sensors",
-            "sourceFile": "dist/sensorsource"
+            "route": "/feed/veldstraat/observations",
+            "sourceFile": "dist/sources/observationSource",
+            "environment": "veldstraat",
+            "topic": "/gent/veldstraat",
+            "username": "opendata",
+            "observationsPerPage": 200
+        },
+        {
+            "route": "/feed/public/zones/v1",
+            "environment":"zones",
+            "sourceFile": "dist/sources/zoneSource"
         },
         {
             "route":"/catalog",
-            "sourceFile":"dist/catalogSource"
+            "environment":"catalog",
+            "sourceFile":"dist/sources/catalogSource"
         }
     ]
 }

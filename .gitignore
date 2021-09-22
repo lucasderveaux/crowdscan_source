@@ -3,7 +3,5 @@ package-lock.json
 *.env
 dist/
 test.json
-dist/sensorSource.js
-dist/sensorSource.js.map
-dist/testSource.js
-dist/testSource.js.map
+*.lock
+yarn.lock

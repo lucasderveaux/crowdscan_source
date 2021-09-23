@@ -2,36 +2,48 @@
     "app": {
         "port": 3000
     },
+    "observationsPerPage":200,
     "db": {
         "host": "C:/GitHub/Basic-LDES-Server-Examples/database.sqlite",
         "maxCount":10000000
     },
     "sources": [
+        
         {
-            "route": "/feed/langemunt/observations",
-            "sourceFile": "dist/sources/observationSource",
-            "environment": "gent_langemunt",
-            "topic": "/gent/gent_langemunt",
-            "username": "opendata",
-            "observationsPerPage":60
-        },
-        {
-            "route": "/feed/veldstraat/observations",
+            "route": "/feed/public/veldstraat/v1",
             "sourceFile": "dist/sources/observationSource",
             "environment": "veldstraat",
             "topic": "/gent/veldstraat",
-            "username": "opendata",
-            "observationsPerPage": 200
+            "username": "opendata"
+        },
+        {
+            "route": "/feed/public/gent_langemunt/v1",
+            "sourceFile": "dist/sources/observationSource",
+            "environment": "gent_langemunt",
+            "topic": "/gent/gent_langemunt",
+            "username": "opendata"
         },
         {
             "route": "/feed/public/zones/v1",
             "environment":"zones",
             "sourceFile": "dist/sources/zoneSource"
+
         },
         {
             "route":"/catalog",
             "environment":"catalog",
             "sourceFile":"dist/sources/catalogSource"
+            
         }
-    ]
+    ],
+    "featureOfInterests": {
+        "gent_langemunt":[
+            "MULTILINESTRING(3.722529868069784 51.0558306603255,3.7227900423442284 51.055989138119095,3.7232138313685814 51.05633306678402,3.7234531765417023 51.05656270707058,3.723467216505414 51.05655720363685,3.7232311821121034 51.05632960517266,3.722983077778226 51.05611886485648,3.722796837235518 51.055970636405476,3.722544709588118 51.05582058823546,3.722529868069784 51.0558306603255)",
+            "MULTILINESTRING(3.722529868069784 51.0558306603255,3.7227900423442284 51.055989138119095,3.7232138313685814 51.05633306678402,3.7234531765417023 51.05656270707058,3.723467216505414 51.05655720363685,3.7232311821121034 51.05632960517266,3.722983077778226 51.05611886485648,3.722796837235518 51.055970636405476,3.722544709588118 51.05582058823546,3.722529868069784 51.0558306603255)",
+            "MULTILINESTRING(3.722529868069784 51.0558306603255,3.7227900423442284 51.055989138119095,3.7232138313685814 51.05633306678402,3.7234531765417023 51.05656270707058,3.723467216505414 51.05655720363685,3.7232311821121034 51.05632960517266,3.722983077778226 51.05611886485648,3.722796837235518 51.055970636405476,3.722544709588118 51.05582058823546,3.722529868069784 51.0558306603255)"
+        ],
+        "veldstraat":[
+            "MULTILINESTRING(3.722529868069784 51.0558306603255,3.7227900423442284 51.055989138119095,3.7232138313685814 51.05633306678402,3.7234531765417023 51.05656270707058,3.723467216505414 51.05655720363685,3.7232311821121034 51.05632960517266,3.722983077778226 51.05611886485648,3.722796837235518 51.055970636405476,3.722544709588118 51.05582058823546,3.722529868069784 51.0558306603255)"
+        ]
+    }
 }

@@ -1,131 +1,113 @@
 import { Quad } from "rdf-js";
 import { literal, namedNode, blankNode, quad } from '@rdfjs/data-model';
 import AInterpreter from "./AInterpreter";
+import interpreterInstance from "./InterpreterInstance";
 
 export default class SensorInterpreterV1 extends AInterpreter {
 
-  constructor() {
-    super();
+  constructor(config: string, interpreterParent: interpreterInstance) {
+    super(config, interpreterParent);
   }
 
-  interpret(data: string[], triples: Quad[]): void {
+  public interpret(data: string[], triples: Quad[]): void {
     let environment = data[0];
     let aantal = Number.parseInt(data[1]);
 
     let date: Date = new Date(Date.now());
 
-    /*
-    feature of interest
-    */
-
-
-    triples.push(
-      quad(
-        namedNode('https://production.crowdscan.be/dataapi/environments/evenstream'),
-        namedNode('https://w3id.org/tree#member'),
-        namedNode('https://crowdscan.be/subject/feed/environment/' + environment + '_v1'),
-      )
-    );
-    triples.push(
-      quad(
-        namedNode('https://production.crowdscan.be/dataap/environments/evenstream'),
-        namedNode('https://w3id.org/tree#member'),
-        namedNode('https://crowdscan.be/subject/feed/sensor/' + environment + '_v1'),
-      )
-    );
-
-    //feature of Interest
-    triples.push(
-      quad(
-        namedNode('https://crowdscan.be/subject/feed/environment/' + environment + '_v1'),
-        namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-        namedNode('http://www.w3.org/ns/sosa/FeatureOfInterest')
-      )
-    );
-
-    triples.push(
-      quad(
-        namedNode('https://crowdscan.be/subject/feed/environment/' + environment + '_v1'),
-        namedNode('http://purl.org/dc/terms/isVersionOf'),
-        namedNode('https://crowdscan.be/subject/feed/environment/' + environment)
-      )
-    );
-    triples.push(
-      quad(
-        namedNode('https://crowdscan.be/subject/feed/environment/' + environment + '_v1'),
-        namedNode('http://purl.org/dc/terms/created'),
-        literal(date.toISOString(), namedNode('http://www.w3.org/2001/XMLSchema#dateTime'))
-      )
-    );
-
-    //property geometry
-    //kleine g
-    //Associates any resource with the corresponding geometry.
-    triples.push(
-      quad(
-        namedNode('https://crowdscan.be/subject/feed/environment/' + environment + '_v1'),
-        namedNode('http://www.w3.org/ns/locn#geometry'),
-        blankNode('loc')
-      )
-    );
-
-    //class Geometry
-    //eometry class provides the means to identify a location as a point, 
-    //line, polygon, etc. expressed using coordinates in some coordinate 
-    //reference system.
-    triples.push(
-      quad(
-        blankNode('loc'),
-        namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-        namedNode('http://www.w3.org/ns/locn#Geometry')
-      )
-    );
-
-    triples.push(
-      quad(
-        blankNode('loc'),
-        namedNode('http://www.opengis.net/ont/geosparql#asWKT'),
-        literal('<http://www.opengis.net/def/crs/OGC/1.3/CRS84> MULTILINESTRING(3.722529868069784 51.0558306603255,3.7227900423442284 51.055989138119095,3.7232138313685814 51.05633306678402,3.7234531765417023 51.05656270707058,3.723467216505414 51.05655720363685,3.7232311821121034 51.05632960517266,3.722983077778226 51.05611886485648,3.722796837235518 51.055970636405476,3.722544709588118 51.05582058823546,3.722529868069784 51.0558306603255)',
-          namedNode('http://www.opengis.net/ont/geosparql#wktLiteral'))
-      )
-    );
-
-
-    //sensoren aanmaken
     for (let i = 0; i < aantal; i++) {
+
+      /*
+      feature of interest
+      */
+
       triples.push(
         quad(
-          namedNode('https://crowdscan.be/subject/feed/sensor/' + environment + '_v' + i),
+          namedNode('https://production.crowdscan.be/' + this.route),
+          namedNode('https://w3id.org/tree#member'),
+          namedNode('https://crowdscan.be/id/' + environment + '/1#v' + i),
+        )
+      );
+
+
+
+      //feature of Interest
+      triples.push(
+        quad(
+          namedNode('https://crowdscan.be/id/' + environment + '/1#v' + i),
           namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-          namedNode('http://www.w3.org/ns/sosa/Sensor')
+          namedNode('http://www.w3.org/ns/sosa/FeatureOfInterest')
+        )
+      );
+      triples.push(
+        quad(
+          namedNode('https://crowdscan.be/id/' + environment + '/1#v' + i),
+          namedNode('http://purl.org/dc/terms/title'),
+          literal("Zone " + i + " int the environment: " + environment)
         )
       );
 
       triples.push(
         quad(
-          namedNode('https://crowdscan.be/subject/feed/sensor/' + environment + '_v' + i),
+          namedNode('https://crowdscan.be/id/' + environment + '/1#v' + i),
           namedNode('http://purl.org/dc/terms/isVersionOf'),
-          namedNode('https://crowdscan.be/subject/feed/sensor/' + environment)
+          namedNode('https://crowdscan.be/id/' + environment + '/1')
         )
       );
-
-
-
       triples.push(
         quad(
-          namedNode('https://crowdscan.be/subject/feed/sensor/' + environment + '_v' + i),
+          namedNode('https://crowdscan.be/id/' + environment + '/1#v' + i),
           namedNode('http://purl.org/dc/terms/created'),
           literal(date.toISOString(), namedNode('http://www.w3.org/2001/XMLSchema#dateTime'))
         )
       );
+
+      //property geometry
+      //kleine g
+      //Associates any resource with the corresponding geometry.
+      triples.push(
+        quad(
+          namedNode('https://crowdscan.be/id/' + environment + '/1#v' + i),
+          namedNode('http://www.w3.org/ns/locn#geometry'),
+          blankNode('loc')
+        )
+      );
+
+      //class Geometry
+      //eometry class provides the means to identify a location as a point, 
+      //line, polygon, etc. expressed using coordinates in some coordinate 
+      //reference system.
+      triples.push(
+        quad(
+          blankNode('loc'),
+          namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+          namedNode('http://www.w3.org/ns/locn#Geometry')
+        )
+      );
+
+      triples.push(
+        quad(
+          blankNode('loc'),
+          namedNode('http://www.opengis.net/ont/geosparql#asWKT'),
+          literal('<http://www.opengis.net/def/crs/OGC/1.3/CRS84>' + this.config['featureOfInterests'][environment][i],
+            namedNode('http://www.opengis.net/ont/geosparql#wktLiteral'))
+        )
+      );
+
+      if (this.firstAddition) {
+
+        //[what, URL fo LDES,environment]
+        this.interpreterParent.giveSubjects(['zones', 'https://production.crowdscan.be/' + this.route, environment]);
+        this.firstAddition = false;
+      }
+
     }
   }
 
-
-  createLDES(triples: Quad[]): void {
+  public createMetadata(triples: Quad[]): void {
     triples.push(
       quad(
-        namedNode('https://production.crowdscan.be/dataapi/public/ldes'),
+        namedNode('https://production.crowdscan.be/' + this.route + '/v1'),
         namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
         namedNode('https://w3id.org/ldes#EventStream')
       )
@@ -135,18 +117,18 @@ export default class SensorInterpreterV1 extends AInterpreter {
   /*
     shacl
   */
-  getShacl(triples: Quad[]): void {
+  public getShacl(triples: Quad[]): void {
 
     triples.push(
       quad(
-        namedNode('http://crowdscan.be/ns/FeatureOfInterestShape'),
+        namedNode('http://crowdscan.be' + this.route + '/FeatureOfInterestShape'),
         namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
         namedNode('http://www.w3.org/ns/shacl#NodeShape')
       )
     );
     triples.push(
       quad(
-        namedNode('http://crowdscan.be/ns/FeatureOfInterestShape'),
+        namedNode('http://crowdscan.be' + this.route + '/FeatureOfInterestShape'),
         namedNode('http://www.w3.org/ns/shacl#targetClass'),
         namedNode('http://www.w3.org/ns/sosa/FeatureOfInterest')
       )
@@ -154,7 +136,7 @@ export default class SensorInterpreterV1 extends AInterpreter {
     //isVersionOf
     triples.push(
       quad(
-        namedNode('http://crowdscan.be/ns/FeatureOfInterestShape'),
+        namedNode('http://crowdscan.be' + this.route + '/FeatureOfInterestShape'),
         namedNode('http://www.w3.org/ns/shacl#property'),
         blankNode('FOFS')
       )
@@ -191,7 +173,7 @@ export default class SensorInterpreterV1 extends AInterpreter {
     //created
     triples.push(
       quad(
-        namedNode('http://crowdscan.be/ns/FeatureOfInterestShape'),
+        namedNode('http://crowdscan.be' + this.route + '/FeatureOfInterestShape'),
         namedNode('http://www.w3.org/ns/shacl#property'),
         blankNode('DC')
       )
@@ -227,7 +209,7 @@ export default class SensorInterpreterV1 extends AInterpreter {
     //geometry
     triples.push(
       quad(
-        namedNode('http://crowdscan.be/ns/FeatureOfInterestShape'),
+        namedNode('http://crowdscan.be' + this.route + '/FeatureOfInterestShape'),
         namedNode('http://www.w3.org/ns/shacl#property'),
         blankNode('g')
       )
@@ -263,21 +245,21 @@ export default class SensorInterpreterV1 extends AInterpreter {
     //GeoShape
     triples.push(
       quad(
-        namedNode('http://crowdscan.be/ns/GeoShape'),
+        namedNode('http://crowdscan.be' + this.route + '/GeoShape'),
         namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
         namedNode('http://www.w3.org/ns/shacl#NodeShape')
       )
     );
     triples.push(
       quad(
-        namedNode('http://crowdscan.be/ns/GeoShape'),
+        namedNode('http://crowdscan.be' + this.route + '/GeoShape'),
         namedNode('http://www.w3.org/ns/shacl#targetClass'),
         namedNode('http://www.w3.org/ns/locn#Geometry')
       )
     );
     triples.push(
       quad(
-        namedNode('http://crowdscan.be/ns/GeoShape'),
+        namedNode('http://crowdscan.be' + this.route + '/GeoShape'),
         namedNode('http://www.w3.org/ns/shacl#property'),
         blankNode('G')
       )
@@ -310,64 +292,17 @@ export default class SensorInterpreterV1 extends AInterpreter {
         namedNode('http://www.w3.org/ns/shacl#datatype'),
         namedNode('http://www.opengis.net/ont/geosparql#wktLiteral')
       )
-    )
-    /*
-    sensorShape
-    */
-    triples.push(
-      quad(
-        namedNode('http://crowdscan.be/ns/SensorShape'),
-        namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-        namedNode('http://www.w3.org/ns/shacl#NodeShape')
-      )
-    );
-    triples.push(
-      quad(
-        namedNode('http://crowdscan.be/ns/SensorShape'),
-        namedNode('http://www.w3.org/ns/shacl#targetClass'),
-        namedNode('http://www.w3.org/ns/sosa/Sensor')
-      )
-    )
-    //created
-    triples.push(
-      quad(
-        namedNode('http://crowdscan.be/ns/SensorShape'),
-        namedNode('http://www.w3.org/ns/shacl#property'),
-        blankNode('C')
-      )
-    );
-    triples.push(
-      quad(
-        blankNode('C'),
-        namedNode('http://www.w3.org/ns/shacl#path'),
-        namedNode('http://purl.org/dc/terms/created')
-      )
-    );
-    triples.push(
-      quad(
-        blankNode('C'),
-        namedNode('http://www.w3.org/ns/shacl#maxCount'),
-        literal('1', 'http://www.w3.org/2001/XMLSchema#integer')
-      )
-    );
-    triples.push(
-      quad(
-        blankNode('C'),
-        namedNode('http://www.w3.org/ns/shacl#minCount'),
-        literal('1', 'http://www.w3.org/2001/XMLSchema#integer')
-      )
-    );
-    triples.push(
-      quad(
-        blankNode('C'),
-        namedNode('http://www.w3.org/ns/shacl#datatype'),
-        namedNode('http://www.w3.org/2001/XMLSchema#dateTime')
-      )
     );
   }
-  createHyperMedia(relations: any[], triples: Quad[]): void {
+  public createHyperMedia(relations: any[], triples: Quad[]): void {
     //Voorlopig geen hypermedia vereist, er zijn maar 3 regio's.
-    return null;
+    triples.push(
+      quad(
+        namedNode('https://production.crowdscan.be/' + this.route),
+        namedNode('https://w3id.org/tree#view'),
+        namedNode(this.route + '/' + relations[0])
+      )
+    );
   }
 
 }

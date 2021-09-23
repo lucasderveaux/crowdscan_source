@@ -1,16 +1,16 @@
-import { Source, Page } from '@treecg/basic-ldes-server';
 import { Readable } from 'stream';
+import { Page } from '../lib/Page';
 import type * as RDF from 'rdf-js';
-import { blankNode, literal, namedNode, quad } from '@rdfjs/data-model';
 import IInterpreter from './Interpreter/IInterpreter';
-import ObservationV1 from './Interpreter/ObservationV1';
 import { crowdscanSource } from './crowdscanSource';
-import { DatabaseFactory } from '../models/DatabaseFactory';
 import interpreterInstance from './Interpreter/InterpreterInstance';
 let mqtt = require('mqtt');
 require('dotenv').config();
 
 export class mySource extends crowdscanSource {
+  appendElement(data: any) {
+    throw new Error('Method not implemented.');
+  }
 
 
   private observationSource = class observationSource {
@@ -35,17 +35,18 @@ export class mySource extends crowdscanSource {
     }
 
     public async appendObservation(rdf: RDF.Quad[]): Promise<void> {
+
       if (this.observations.length == 0) {
         this.observations = rdf;
       } else {
-        if (this.observations.length >= this.config['observationsPerPage']) {
+        if (this.observations.length >= this.parent.publicConfig['observationsPerPage']) {
           this.observations = this.observations.concat(rdf);
           this.createPage();
           this.hoeveelheid++;
           this.observations = [];
         } else {
           this.observations = this.observations.concat(rdf);
-          console.log(this.observations.length);
+          console.log(this.config["environment"] + ": " + this.observations.length);
         }
       }
     }
@@ -54,6 +55,7 @@ export class mySource extends crowdscanSource {
         function for one observation
     */
     public makeObservation(data: string): RDF.Quad[] {
+
       let rdf: RDF.Quad[];
       rdf = [];
 
@@ -65,12 +67,12 @@ export class mySource extends crowdscanSource {
     public async createPage(): Promise<void> {
       let rdf: RDF.Quad[] = [];
       this.interpreter.getShacl(rdf);
-      this.interpreter.createLDES(rdf);
+      this.interpreter.createMetadata([this.hoeveelheid], rdf);
       rdf = rdf.concat(this.observations);
 
       this.interpreter.createHyperMedia([this.hoeveelheid, this.config['environment']], rdf);
       let p = new Page([], rdf);
-      //console.log(p);
+
       this.parent.createPage(p);
 
     }
@@ -89,6 +91,7 @@ export class mySource extends crowdscanSource {
 
   setInterpreter(interpreter: IInterpreter) {
     this.cr.setInterpreter(interpreter);
+    interpreter.setRoute(this.config['route']);
   }
 
 
@@ -120,11 +123,12 @@ export class mySource extends crowdscanSource {
       console.log('connected to MQTT data broker');
     });
 
+
     client.subscribe(this.config['topic']);
 
 
     client.on('message', function (topic: string, message: string, packet: any) {
-      // tijd = new Date(JSON.parse(message)['header']['time']);
+
       rdf = cr.makeObservation(message);
 
       let val = Buffer.from(JSON.stringify(rdf));

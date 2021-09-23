@@ -1,15 +1,17 @@
 import * as RDF from 'rdf-js';
-import IInterpreter from './IInterpreter';
 import { literal, namedNode, blankNode, quad } from '@rdfjs/data-model';
 import AInterpreter from './AInterpreter';
+import interpreterInstance from './InterpreterInstance';
 
 export default class ObservationV1 extends AInterpreter {
 
-  constructor() {
-    super();
+  constructor(config: string, interpreterParent: interpreterInstance) {
+    super(config, interpreterParent);
   }
 
-  createLDES(triples: RDF.Quad[]): void {
+  createMetadata(data: any[], triples: RDF.Quad[]): void {
+    let route = 'https://crowdscan.be' + this.route;
+    let hoeveelheid = Number.parseInt(data[0]);
     /*
     observable property
     */
@@ -17,35 +19,35 @@ export default class ObservationV1 extends AInterpreter {
       quad(
         //http://www.wikidata.org/entity/P3872 is the patronage
         //the number of passengers,patrons or visitors in a specified time period
-        namedNode('https://crowdscan.be/ns/numberOfPeople'),
+        namedNode('https://crowdscan.be/id/PeopleEstimate'),
         namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
         namedNode('http://www.w3.org/ns/sosa/ObservableProperty')
       )
     );
     triples.push(
       quad(
-        namedNode('https://crowdscan.be/ns/numberOfPeople'),
+        namedNode('https://crowdscan.be/id/PeopleEstimate'),
         namedNode('http://www.w3.org/2004/02/skos/core#narrowMatch'),
         namedNode('http://www.wikidata.org/entity/P3872')
       )
     );
     triples.push(
       quad(
-        namedNode('https://crowdscan.be/ns/numberOfPeople'),
+        namedNode('https://crowdscan.be/id/PeopleEstimate'),
         namedNode('http://www.w3.org/2000/01/rdf-schema#comment'),
         literal("Number of people in an environment", "en")
       )
     );
     triples.push(
       quad(
-        namedNode('https://crowdscan.be/ns/numberOfPeople'),
+        namedNode('https://crowdscan.be/id/PeopleEstimate'),
         namedNode('http://www.w3.org/2000/01/rdf-schema#comment'),
         literal("Hoeveelheid mensen in een bepaald gebied", "nl")
       )
     );
     triples.push(
       quad(
-        namedNode('https://crowdscan.be/ns/numberOfPeople'),
+        namedNode('https://crowdscan.be/id/PeopleEstimate'),
         namedNode('https://www.w3.org/2000/01/rdf-schema#isDefinedBy'),
         namedNode('https://crowdscan.be/ns/')
       )
@@ -56,9 +58,54 @@ export default class ObservationV1 extends AInterpreter {
     //LDES
     triples.push(
       quad(
-        namedNode('https://production.crowdscan.be/dataapi/public/ldes'),
+        namedNode(route),
         namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
         namedNode('https://w3id.org/ldes#EventStream')
+      )
+    );
+    triples.push(
+      quad(
+        namedNode(route),
+        namedNode('http://w3id.org/ldes#timestampPath'),
+        namedNode('http://www.w3.org/ns/sosa/resultTime')
+      )
+    );
+    triples.push(
+      quad(
+        namedNode(route),
+        namedNode('http://w3id.org/tree#shape'),
+        namedNode(route + '/shape.ttl')
+      )
+    );
+    triples.push(
+      quad(
+        namedNode(route),
+        namedNode('http://w3id.org/tree#view'),
+        namedNode(route + '/' + hoeveelheid)
+      )
+    );
+
+    triples.push(
+      quad(
+        namedNode(route + '/' + hoeveelheid),
+        namedNode('http://w3id.org/ldes#retentionPolicy'),
+        blankNode('_r')
+      )
+    );
+
+    triples.push(
+      quad(
+        blankNode('_r'),
+        namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+        namedNode('http://w3id.org/ldes#latestVersionSubset')
+      )
+    );
+
+    triples.push(
+      quad(
+        blankNode('_r'),
+        namedNode('http://w3id.org/ldes#latestVersionSubset'),
+        literal(this.config["observationsPerPage"])
       )
     );
 
@@ -71,18 +118,39 @@ export default class ObservationV1 extends AInterpreter {
     let tijd: Date = new Date(inhoud['header']['time']);
 
     let environment = inhoud['header']['environment'];
+    //binnen de quad kan je niet aan instantievariabelen van de klasse
+
+    let route = 'https://crowdscan.be' + this.route;
+
+
+    /*
+      Add zones to the zoneInterpreter
+      The boolean firstAddition gives the indication that the zones of these observations haven't been added yet
+    */
+    if (this.firstAddition) {
+      if (payload.length != 1) {
+        this.interpreterParent.giveZones(environment, payload.length - 1);
+      } else {
+        this.interpreterParent.giveZones(environment, 1);
+      }
+      //[what, URL fo LDES,environment]
+      this.interpreterParent.giveSubjects(['observations', route, environment]);
+      this.firstAddition = false;
+    }
+
+    //one observation in a certain environment
 
     function makeSingleObservation(headCount: number, environment: string, i: number): void {
       rdf.push(
         quad(
-          namedNode('https://production.crowdscan.be/dataapi/environments/evenstream'),
+          namedNode(route + '/v1'),
           namedNode('https://w3id.org/tree#member'),
-          namedNode('https://crowdscan.be/subject/feed/observation/' + environment + '/' + tijd.getTime() + i),
+          namedNode(route + '/' + i + '/' + tijd.toISOString()),
         )
       );
       rdf.push(
         quad(
-          namedNode('https://crowdscan.be/subject/feed/observation//' + environment + '/' + tijd.getTime() + i),
+          namedNode(route + '/' + i + '/' + tijd.toISOString()),
           namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
           namedNode('http://www.w3.org/ns/sosa/Observation')
         )
@@ -90,23 +158,23 @@ export default class ObservationV1 extends AInterpreter {
       //hasFeatureOfInterest
       rdf.push(
         quad(
-          namedNode('https://crowdscan.be/subject/feed/observation/' + environment + '/' + tijd.getTime() + i),
+          namedNode(route + '/' + i + '/' + tijd.toISOString()),
           namedNode('http://www.w3.org/ns/sosa/hasFeatureOfInterest'),
-          namedNode('https://crowdscan.be/subject/feed/environment/' + environment + '_v1')
+          namedNode('https://crowdscan.be/id/' + environment + '/1#v' + i)
         )
       );
       //observedProperty
       rdf.push(
         quad(
-          namedNode('https://crowdscan.be/subject/feed/observation/' + environment + '/' + tijd.getTime() + i),
+          namedNode(route + '/' + i + '/' + tijd.toISOString()),
           namedNode('http://www.w3.org/ns/sosa/observedProperty'),
-          namedNode('https://crowdscan.be/ns/numberOfPeople')
+          namedNode('https://crowdscan.be/id/PeopleEstimate')
         )
       );
       //resultTime
       rdf.push(
         quad(
-          namedNode('https://crowdscan.be/subject/feed/observation/' + environment + '/' + tijd.getTime() + i),
+          namedNode(route + '/' + i + '/' + tijd.toISOString()),
           namedNode('http://www.w3.org/ns/sosa/resultTime'),
           literal(tijd.toISOString(), namedNode('http://www.w3.org/2001/XMLSchema#dateTime'))
         )
@@ -114,7 +182,7 @@ export default class ObservationV1 extends AInterpreter {
       //hasSimpleResult
       rdf.push(
         quad(
-          namedNode('https://crowdscan.be/subject/feed/observation/' + environment + '/' + tijd.getTime() + i),
+          namedNode(route + '/' + i + '/' + tijd.toISOString()),
           namedNode('http://www.w3.org/ns/sosa/hasSimpleResult'),
           literal(headCount.toString(), namedNode('http://www.w3.org/2001/XMLSchema#double'))
         )
@@ -122,37 +190,43 @@ export default class ObservationV1 extends AInterpreter {
       //phenomenonTime
       rdf.push(
         quad(
-          namedNode('https://crowdscan.be/subject/feed/observation/' + environment + '/' + tijd.getTime() + i),
+          namedNode(route + '/' + i + '/' + tijd.toISOString()),
           namedNode('http://www.w3.org/ns/sosa/phenomenonTime'),
           literal(tijd.toISOString(), namedNode('http://www.w3.org/2001/XMLSchema#dateTime'))
         )
       );
-      //madeBySensor
+
+      //feature of interest
       rdf.push(
         quad(
-          namedNode('https://crowdscan.be/subject/feed/observation/' + environment + '/' + tijd.getTime() + i),
-          namedNode('http://www.w3.org/ns/sosa/madeBySensor'),
-          namedNode('https://crowdscan.be/subject/feed/sensor/' + environment + '_v' + i)
+          namedNode('https://crowdscan.be/id/' + environment + '/1#v' + i),
+          namedNode('http://purl.org/dc/terms/isVersionOf'),
+          namedNode('https://crowdscan.be/id/gent_langemunt/1')
         )
       );
     }
 
-    for (let i = 0; i < payload.length; i++) {
-      makeSingleObservation(payload[i], environment, i);
+    if (payload.length == 1) {
+      makeSingleObservation(payload[0], environment, 0);
+    } else {
+      for (let i = 1; i < payload.length; i++) {
+        makeSingleObservation(payload[i], environment, i);
+      }
     }
   }
 
-  getShacl(triples: RDF.Quad[]): void {
+  public getShacl(triples: RDF.Quad[]): void {
+    let route = 'https://crowdscan.be' + this.route;
     triples.push(
       quad(
-        namedNode('http://crowdscan.be/ns/ObservationShape'),
+        namedNode(route + '/ObservationShape'),
         namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
         namedNode('http://www.w3.org/ns/shacl#NodeShape')
       )
     );
     triples.push(
       quad(
-        namedNode('http://crowdscan.be/ns/ObservationShape'),
+        namedNode(route + '/ObservationShape'),
         namedNode('http://www.w3.org/ns/shacl#targetClass'),
         namedNode('http://www.w3.org/ns/sosa/Observation')
       )
@@ -164,7 +238,7 @@ export default class ObservationV1 extends AInterpreter {
     //hasFeatureOfInterest
     triples.push(
       quad(
-        namedNode('http://crowdscan.be/ns/ObservationShape'),
+        namedNode(route + '/ObservationShape'),
         namedNode('http://www.w3.org/ns/shacl#property'),
         blankNode('FOF')
       )
@@ -203,7 +277,7 @@ export default class ObservationV1 extends AInterpreter {
     //observedProperty
     triples.push(
       quad(
-        namedNode('http://crowdscan.be/ns/ObservationShape'),
+        namedNode(route + '/ObservationShape'),
         namedNode('http://www.w3.org/ns/shacl#property'),
         blankNode('OP')
       )
@@ -242,7 +316,7 @@ export default class ObservationV1 extends AInterpreter {
      */
     triples.push(
       quad(
-        namedNode('http://crowdscan.be/ns/ObservationShape'),
+        namedNode(route + '/ObservationShape'),
         namedNode('http://www.w3.org/ns/shacl#property'),
         blankNode('RT')
       )
@@ -278,7 +352,7 @@ export default class ObservationV1 extends AInterpreter {
     //hasSimpleResult
     triples.push(
       quad(
-        namedNode('http://crowdscan.be/ns/ObservationShape'),
+        namedNode(route + '/ObservationShape'),
         namedNode('http://www.w3.org/ns/shacl#property'),
         blankNode('HSR')
       )
@@ -314,7 +388,7 @@ export default class ObservationV1 extends AInterpreter {
     //phenomenonTime
     triples.push(
       quad(
-        namedNode('http://crowdscan.be/ns/ObservationShape'),
+        namedNode(route + '/ObservationShape'),
         namedNode('http://www.w3.org/ns/shacl#property'),
         blankNode('PT')
       )
@@ -347,62 +421,26 @@ export default class ObservationV1 extends AInterpreter {
         namedNode('http://www.w3.org/2001/XMLSchema#dateTime')
       )
     );
-    //madeBySensor
-    triples.push(
-      quad(
-        namedNode('http://crowdscan.be/ns/ObservationShape'),
-        namedNode('http://www.w3.org/ns/shacl#property'),
-        blankNode('MBS')
-      )
-    );
-    triples.push(
-      quad(
-        blankNode('MBS'),
-        namedNode('http://www.w3.org/ns/shacl#path'),
-        namedNode('http://www.w3.org/ns/sosa/madeBySensor')
-      )
-    );
-    triples.push(
-      quad(
-        blankNode('MBS'),
-        namedNode('http://www.w3.org/ns/shacl#maxCount'),
-        literal('1', 'http://www.w3.org/2001/XMLSchema#integer')
-      )
-    );
-    triples.push(
-      quad(
-        blankNode('MBS'),
-        namedNode('http://www.w3.org/ns/shacl#minCount'),
-        literal('1', 'http://www.w3.org/2001/XMLSchema#integer')
-      )
-    );
-    //verwijst naar andere node
-    triples.push(
-      quad(
-        blankNode('MBS'),
-        namedNode('http://www.w3.org/ns/shacl#nodeKind'),
-        namedNode('http://www.w3.org/ns/shacl#IRI')
-      )
-    );
+
   }
 
   createHyperMedia(data, rdf): void {
     let hoeveelheid = data[0];
-    let environment = data[1];
     let time = new Date();
-    /*
+    let route = this.route;
+    /*f
           hyperMedia creation
     */
     rdf.push(
       quad(
-        namedNode('https://production.crowdscan.be/dataapi/environments/evenstream'),
+        namedNode('https://crowdscan.be' + route),
         namedNode('https://w3id.org/tree#view'),
-        namedNode('https://localhost:3000/feed/' + environment + '/observations/' + hoeveelheid)
+        namedNode('https://localhost:3000' + this.route + '/' + (hoeveelheid))
       )
     );
     rdf.push(
       quad(
-        namedNode('https://localhost:3000/feed/' + environment + '/observations/' + hoeveelheid),
+        namedNode('https://localhost:3000' + this.route + '/' + (hoeveelheid)),
         namedNode('https://w3id.org/tree#relation'),
         blankNode('r' + hoeveelheid)
       )
@@ -438,7 +476,7 @@ export default class ObservationV1 extends AInterpreter {
       quad(
         blankNode('r' + hoeveelheid),
         namedNode('https://w3id.org/tree#node'),
-        namedNode('https://localhost:3000/feed/' + environment + '/observations/' + (hoeveelheid + 1))
+        namedNode('https://localhost:3000' + this.route + '/' + (hoeveelheid + 1))
       )
     );
   }

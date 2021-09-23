@@ -1,6 +1,7 @@
 import SensorInterpreterV1 from "./ZoneInterpreterV1";
 import ObservationV1 from "./ObservationV1";
 import { crowdscanSource } from "../crowdscanSource";
+import CatalogInterpreter from "./catalogInterpreter";
 
 
 export default class interpreterInstance {
@@ -12,19 +13,25 @@ export default class interpreterInstance {
 
   constructor(config) {
     this.config = config;
+
   }
 
   public async appendZone(zones: crowdscanSource) {
     this.zones = zones;
+  }
 
+  public async createZonePages() {
+    while (this.zones == null && this.catalog == null) {
+      setTimeout(() => { console.log('slight delay for zones to start') }, 2000);
+    }
     //createDatabase
     await this.zones.createDatabase(this.config['db']['host'], 'zones');
 
     //giveInterpreter
-    this.zones.setInterpreter(new SensorInterpreterV1());
+    this.zones.setInterpreter(new SensorInterpreterV1(this.config, this));
 
-    //moet weg
-    await this.zones.createPages();
+    this.zones.createPages();
+
   }
 
   public async appendCatalog(catalog: crowdscanSource) {
@@ -34,25 +41,31 @@ export default class interpreterInstance {
     await this.catalog.createDatabase(this.config['db']['host'], 'catalog');
 
     //giveInterpreter
-
-    //moet weg
-    await this.catalog.createPages();
+    this.catalog.setInterpreter(new CatalogInterpreter(this.config, this));
   }
 
-  public giveZones() {
+
+
+  public giveZones(environment: string, amount: Number) {
     //not implemented yet
+    this.zones.appendElement([environment, amount]);
+  }
+
+  public giveSubjects(data: any[]) {
+    this.catalog.appendElement(data);
   }
 
   public async appendObservation(observation: crowdscanSource, tableName: string) {
-    //appendObservations
 
     //maak databank aan
     await observation.createDatabase(this.config['db']['host'], tableName);
 
     //geefInterpreter
-    observation.setInterpreter(new ObservationV1());
+    observation.setInterpreter(new ObservationV1(this.config, this));
 
-    //createRstream
+    while (this.zones == null && this.catalog == null) {
+      setTimeout(() => { console.log('slight delay for catalog and zones to start') }, 2000);
+    }
     observation.createPages();
   }
 }

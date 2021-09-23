@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, ModelCtor } from 'sequelize';
+import { Sequelize, DataTypes } from 'sequelize';
 
 export class DatabaseFactory {
   private db: Sequelize;

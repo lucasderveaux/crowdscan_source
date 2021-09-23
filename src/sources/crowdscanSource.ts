@@ -1,6 +1,7 @@
-import { Source, Page } from '@treecg/basic-ldes-server';
+import { Source } from '@treecg/basic-ldes-server';
 import { DatabaseFactory } from '../models/DatabaseFactory';
 import type * as RDF from 'rdf-js';
+import { Page } from '../lib/Page';
 import * as RdfString from "rdf-string";
 import * as fs from 'fs';
 import interpreterInstance from './Interpreter/InterpreterInstance';
@@ -39,32 +40,45 @@ export abstract class crowdscanSource extends Source {
     this.databaseModel = databaseModel;
   }
 
+  public async destroyPage(id: any) {
+    await this.databaseModel.destroy({ where: { id: Number.parseInt(id) } });
+  }
+
   async importPageWithoutIndex(page: Page): Promise<void> {
     let amountString = await this.databaseModel.count();
     let amount = Number.parseInt(amountString);
     if (amount >= this.maxCount) {
-      await this.databaseModel.destroy({ where: { id: this.pointer } });
+      await this.destroyPage(this.pointer);
       this.pointer++;
     }
 
     let pageJSON = JSON.stringify(page.serialize())
 
     //id van de laatste entry vinden
-    let latest = await this.databaseModel.findOne({
-      order: [['id', 'DESC']]
-    });
+    let latest = await this.getFinalEntry();
     if (latest != null) {
-      amount = Number.parseInt(latest.id);
-
+      amount = latest;
     }
 
     let id = (amount + 1).toString();
     amount++;
 
-    console.log("de ID is:" + amount);
+
     await this.databaseModel.create({ id: id, page: pageJSON });
 
 
+  }
+
+  async getFinalEntry(): Promise<any> {
+    let latest = await this.databaseModel.findOne({
+      order: [['id', 'DESC']]
+    });
+
+    if (latest == null) {
+      return null;
+    } else {
+      return Number.parseInt(latest.id);
+    }
   }
 
 
@@ -74,7 +88,7 @@ export abstract class crowdscanSource extends Source {
       //rejectOnEmpty: true,
     });
     if (response == null) {
-      return new Page([], []);
+      return null;
     }
     let parsed = JSON.parse(response.page);
     let page_ = this.deserializePage(parsed);
@@ -83,7 +97,7 @@ export abstract class crowdscanSource extends Source {
   }
 
 
-  private deserializePage(json: object): Page {
+  public deserializePage(json: object): Page {
     let triples: RDF.Quad[] = [];
     let metadata: RDF.Quad[] = [];
 
@@ -101,4 +115,5 @@ export abstract class crowdscanSource extends Source {
 
   abstract createPages();
   abstract setInterpreter(interpreter: IInterpreter);
+  abstract appendElement(data: any);
 }

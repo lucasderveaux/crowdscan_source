@@ -1,23 +1,27 @@
 import { Quad } from "rdf-js";
 import IInterpreter from "./IInterpreter";
+import InterpreterInstance from "./InterpreterInstance";
 
 export default abstract class AInterpreter implements IInterpreter {
-  firstTime: Boolean;
+  public firstAddition: Boolean;
+  public interpreterParent;
+  public config: string;
+  public route: string;
 
-  constructor() {
-    this.firstTime = true;
+  constructor(config: string, interpreterParent: InterpreterInstance) {
+    this.firstAddition = true;
+    this.interpreterParent = interpreterParent;
+    this.config = config;
+    this.route = 'test';
   }
-  createLDES(triples: Quad[]): void {
-    throw new Error("Method not implemented.");
+
+  public setRoute(route: string) {
+    this.route = route;
   }
-  getShacl(triples: Quad[]): void {
-    throw new Error("Method not implemented.");
-  }
-  interpret(data: any, triples: Quad[]): void {
-    throw new Error("Method not implemented.");
-  }
-  createHyperMedia(relations: any, triples: Quad[]): void {
-    throw new Error("Method not implemented.");
-  }
+
+  abstract createMetadata(data: any[], triples: Quad[]): void;
+  abstract getShacl(triples: Quad[]): void;
+  abstract interpret(data: any, triples: Quad[]): void;
+  abstract createHyperMedia(relations: any, triples: Quad[]): void;
 
 }

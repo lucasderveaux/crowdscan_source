@@ -55,3 +55,20 @@ git clone https://github.com/lucasderveaux/crowdscan_source.git
 yarn install
 yarn run start
 ```
+
+### Deployment
+In order to deploy the LDES-server, a Dockerfile is included. To build the image, Docker needs to be installed on your development machine. Before
+you build the image, you'll have to create a .env file with the essential credentials: 
+```
+docker build -t crowdscan_ldes_server .
+```
+To launch the container:
+```
+docker run -p 3000:3000 --name crowdscan_ldes crowdscan_ldes_server
+```
+To stop the container:
+```
+docker stop crowdscan_ldes
+```
+
+

@@ -25,7 +25,7 @@ export default class interpreterInstance {
       setTimeout(() => { console.log('slight delay for zones to start') }, 2000);
     }
     //createDatabase
-    await this.zones.createDatabase(this.config['db']['host'], 'zones');
+    await this.zones.createDatabase(this.config['db']['host'], this.zones.route);
 
     // not necesarry yet because there's only one interpreter
 
@@ -46,7 +46,7 @@ export default class interpreterInstance {
     this.catalog = catalog;
 
     //createDatabase
-    await this.catalog.createDatabase(this.config['db']['host'], 'catalog');
+    await this.catalog.createDatabase(this.config['db']['host'], this.catalog.route);
 
     //giveInterpreter
     this.catalog.setInterpreter(new CatalogInterpreter(this.config, this));

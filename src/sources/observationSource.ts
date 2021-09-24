@@ -86,7 +86,7 @@ export class mySource extends crowdscanSource {
     super(config, instance);
     this.config = config;
     this.cr = new this.observationSource(this.config, this);
-    this.instance.appendObservation(this, this.config['environment']);
+    this.instance.appendObservation(this, this.config['route']);
     this.route = this.config['route'];
   }
 

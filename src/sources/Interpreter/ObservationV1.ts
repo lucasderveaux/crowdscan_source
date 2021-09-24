@@ -139,18 +139,19 @@ export default class ObservationV1 extends AInterpreter {
     }
 
     //one observation in a certain environment
+    let observationPrefix = 'https://crowdscan.be/id';
 
     function makeSingleObservation(headCount: number, environment: string, i: number): void {
       rdf.push(
         quad(
           namedNode(route + '/v1'),
           namedNode('https://w3id.org/tree#member'),
-          namedNode(route + '/' + i + '/' + tijd.toISOString()),
+          namedNode(observationPrefix + '/' + i + '/' + tijd.toISOString()),
         )
       );
       rdf.push(
         quad(
-          namedNode(route + '/' + i + '/' + tijd.toISOString()),
+          namedNode(observationPrefix + '/' + i + '/' + tijd.toISOString()),
           namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
           namedNode('http://www.w3.org/ns/sosa/Observation')
         )
@@ -158,7 +159,7 @@ export default class ObservationV1 extends AInterpreter {
       //hasFeatureOfInterest
       rdf.push(
         quad(
-          namedNode(route + '/' + i + '/' + tijd.toISOString()),
+          namedNode(observationPrefix + '/' + i + '/' + tijd.toISOString()),
           namedNode('http://www.w3.org/ns/sosa/hasFeatureOfInterest'),
           namedNode('https://crowdscan.be/id/' + environment + '/1#v' + i)
         )
@@ -166,7 +167,7 @@ export default class ObservationV1 extends AInterpreter {
       //observedProperty
       rdf.push(
         quad(
-          namedNode(route + '/' + i + '/' + tijd.toISOString()),
+          namedNode(observationPrefix + '/' + i + '/' + tijd.toISOString()),
           namedNode('http://www.w3.org/ns/sosa/observedProperty'),
           namedNode('https://crowdscan.be/id/PeopleEstimate')
         )
@@ -174,7 +175,7 @@ export default class ObservationV1 extends AInterpreter {
       //resultTime
       rdf.push(
         quad(
-          namedNode(route + '/' + i + '/' + tijd.toISOString()),
+          namedNode(observationPrefix + '/' + i + '/' + tijd.toISOString()),
           namedNode('http://www.w3.org/ns/sosa/resultTime'),
           literal(tijd.toISOString(), namedNode('http://www.w3.org/2001/XMLSchema#dateTime'))
         )
@@ -182,7 +183,7 @@ export default class ObservationV1 extends AInterpreter {
       //hasSimpleResult
       rdf.push(
         quad(
-          namedNode(route + '/' + i + '/' + tijd.toISOString()),
+          namedNode(observationPrefix + '/' + i + '/' + tijd.toISOString()),
           namedNode('http://www.w3.org/ns/sosa/hasSimpleResult'),
           literal(headCount.toString(), namedNode('http://www.w3.org/2001/XMLSchema#double'))
         )
@@ -190,7 +191,7 @@ export default class ObservationV1 extends AInterpreter {
       //phenomenonTime
       rdf.push(
         quad(
-          namedNode(route + '/' + i + '/' + tijd.toISOString()),
+          namedNode(observationPrefix + '/' + i + '/' + tijd.toISOString()),
           namedNode('http://www.w3.org/ns/sosa/phenomenonTime'),
           literal(tijd.toISOString(), namedNode('http://www.w3.org/2001/XMLSchema#dateTime'))
         )

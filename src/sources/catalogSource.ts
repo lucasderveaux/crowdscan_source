@@ -13,8 +13,9 @@ export class mySource extends crowdscanSource {
 
   constructor(config: object, instance: interpreterInstance) {
     super(config, instance);
-    this.instance.appendCatalog(this);
     this.route = this.config['route'];
+    this.instance.appendCatalog(this);
+
   }
 
   setInterpreter(interpreter: IInterpreter) {

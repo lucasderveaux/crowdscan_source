@@ -15,12 +15,18 @@ export abstract class crowdscanSource extends Source {
   private maxCount: number = 1000000; //default is 1000000
   pointer: number;
   public instance: interpreterInstance;
+  public route: string;
 
   constructor(config: object, instance: interpreterInstance) {
     super(config);
     this.instance = instance;
     this.readFile();
     this.pointer = 1;
+  }
+
+  getVersion(): string {
+    let last = this.route.lastIndexOf('/');
+    return this.route.substring(last + 1, last + 3);
   }
 
   async readFile() {

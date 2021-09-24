@@ -17,11 +17,12 @@ export class mySource extends crowdscanSource {
   constructor(config: object, instance: interpreterInstance) {
     super(config, instance);
     this.instance.appendZone(this);
+    this.route = this.config['route'];
   }
 
   setInterpreter(interpreter: IInterpreter) {
     this.interpreter = interpreter;
-    this.interpreter.setRoute(this.config['route']);
+    this.interpreter.setRoute(this.route);
   }
 
   async createPages(): Promise<void> {

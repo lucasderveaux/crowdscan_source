@@ -87,11 +87,12 @@ export class mySource extends crowdscanSource {
     this.config = config;
     this.cr = new this.observationSource(this.config, this);
     this.instance.appendObservation(this, this.config['environment']);
+    this.route = this.config['route'];
   }
 
   setInterpreter(interpreter: IInterpreter) {
     this.cr.setInterpreter(interpreter);
-    interpreter.setRoute(this.config['route']);
+    interpreter.setRoute(this.route);
   }
 
 

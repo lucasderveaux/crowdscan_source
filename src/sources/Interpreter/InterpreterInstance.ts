@@ -27,6 +27,14 @@ export default class interpreterInstance {
     //createDatabase
     await this.zones.createDatabase(this.config['db']['host'], 'zones');
 
+    // not necesarry yet because there's only one interpreter
+
+    // let version:string = this.zones.getVersion();
+    // if(version =='v1'){
+    // ...
+
+
+
     //giveInterpreter
     this.zones.setInterpreter(new SensorInterpreterV1(this.config, this));
 

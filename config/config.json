@@ -26,13 +26,11 @@
         },
         {
             "route": "/feed/public/zones/v1",
-            "environment":"zones",
             "sourceFile": "dist/sources/zoneSource"
 
         },
         {
             "route":"/feed/public",
-            "environment":"catalog",
             "sourceFile":"dist/sources/catalogSource"
             
         }

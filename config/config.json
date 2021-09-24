@@ -31,7 +31,7 @@
 
         },
         {
-            "route":"/catalog",
+            "route":"/feed/public",
             "environment":"catalog",
             "sourceFile":"dist/sources/catalogSource"
             

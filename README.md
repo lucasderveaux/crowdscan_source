@@ -15,19 +15,17 @@ Afterwards you can change the configuration file in order to subscribe to the ri
         "port": 3000
     },
     "db": {
-        "host": "<location to sqlite db>"
+        "host": "<location to sqlite db>",
+        "maxCount":<maximum amount of pages the database will contain>
     },
     "entrypoint": "https://www.example.com/"
     "sources" : [ 
         {
             "route": "/endpoint-route", //relative endpoint route
             "sourceFile": "<relative path to compiled Source implementation in dist folder>",
-            "usesImportPages": <boolean>,
-            "importInterval": <importPages interval> //time between calls to importPages
             "environment": "<environment>",
             "topic": "<mqtt-topic to subscribe to>",
             "username": "<mqtt username>",
-            "observationsPerPage": <observations per page>
         },
          {
             "route": "/sensors",
@@ -38,7 +36,16 @@ Afterwards you can change the configuration file in order to subscribe to the ri
             "sourceFile":"<relative path to compiled Source implementation in dist folder>"
         }
         ...
-    ]
+    ],
+    "featureOfInterests": {
+        "gent_langemunt":[
+            //In the gent_langemunt there are three zones so
+            "value1","value2","value3"
+        ],
+        "veldstraat":[
+            "value1"
+        ]
+    }
 }
 ```
 An example of this can be found here: [ExampleConfigFile](https://github.com/lucasderveaux/crowdscan_source/blob/main/config/config.json)

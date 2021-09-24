@@ -35,14 +35,14 @@ export default class ObservationV1 extends AInterpreter {
       quad(
         namedNode('https://crowdscan.be/id/PeopleEstimate'),
         namedNode('http://www.w3.org/2000/01/rdf-schema#comment'),
-        literal("Number of people in an environment", "en")
+        literal("Calculated estimate of the number of people in an environment", "en")
       )
     );
     triples.push(
       quad(
         namedNode('https://crowdscan.be/id/PeopleEstimate'),
         namedNode('http://www.w3.org/2000/01/rdf-schema#comment'),
-        literal("Hoeveelheid mensen in een bepaald gebied", "nl")
+        literal("Berekende hoeveelheid mensen in een bepaald gebied", "nl")
       )
     );
     triples.push(
@@ -89,13 +89,13 @@ export default class ObservationV1 extends AInterpreter {
       quad(
         namedNode(route + '/' + hoeveelheid),
         namedNode('http://w3id.org/ldes#retentionPolicy'),
-        blankNode('_r')
+        blankNode('r')
       )
     );
 
     triples.push(
       quad(
-        blankNode('_r'),
+        blankNode('r'),
         namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
         namedNode('http://w3id.org/ldes#latestVersionSubset')
       )
@@ -103,7 +103,7 @@ export default class ObservationV1 extends AInterpreter {
 
     triples.push(
       quad(
-        blankNode('_r'),
+        blankNode('r'),
         namedNode('http://w3id.org/ldes#latestVersionSubset'),
         literal(this.config["observationsPerPage"])
       )
@@ -433,14 +433,14 @@ export default class ObservationV1 extends AInterpreter {
     */
     rdf.push(
       quad(
-        namedNode('https://crowdscan.be' + route),
+        namedNode(this.config['entrypoint'] + route),
         namedNode('https://w3id.org/tree#view'),
-        namedNode('https://localhost:3000' + this.route + '/' + (hoeveelheid))
+        namedNode(this.config['entrypoint'] + this.route + '/' + (hoeveelheid))
       )
     );
     rdf.push(
       quad(
-        namedNode('https://localhost:3000' + this.route + '/' + (hoeveelheid)),
+        namedNode(this.config['entrypoint'] + this.route + '/' + (hoeveelheid)),
         namedNode('https://w3id.org/tree#relation'),
         blankNode('r' + hoeveelheid)
       )
@@ -476,7 +476,7 @@ export default class ObservationV1 extends AInterpreter {
       quad(
         blankNode('r' + hoeveelheid),
         namedNode('https://w3id.org/tree#node'),
-        namedNode('https://localhost:3000' + this.route + '/' + (hoeveelheid + 1))
+        namedNode(this.config['entrypoint'] + this.route + '/' + (hoeveelheid + 1))
       )
     );
   }

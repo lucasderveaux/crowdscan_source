@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "dependencies": {
     "@rdfjs/data-model": "^1.3.2",
-    "@treecg/basic-ldes-server": "^1.1.0",
+    "@treecg/basic-ldes-server": "latest",
     "@types/node": "^15.14.1",
     "dotenv": "^10.0.0",
     "node-fetch": "^2.6.1",

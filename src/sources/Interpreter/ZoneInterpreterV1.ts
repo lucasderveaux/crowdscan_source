@@ -23,7 +23,7 @@ export default class SensorInterpreterV1 extends AInterpreter {
 
       triples.push(
         quad(
-          namedNode('https://production.crowdscan.be/' + this.route),
+          namedNode('https://production.crowdscan.be' + this.route),
           namedNode('https://w3id.org/tree#member'),
           namedNode('https://crowdscan.be/id/' + environment + '/1#v' + i),
         )
@@ -43,7 +43,7 @@ export default class SensorInterpreterV1 extends AInterpreter {
         quad(
           namedNode('https://crowdscan.be/id/' + environment + '/1#v' + i),
           namedNode('http://purl.org/dc/terms/title'),
-          literal("Zone " + i + " int the environment: " + environment)
+          literal("Zone " + i + " in the environment: " + environment)
         )
       );
 
@@ -97,7 +97,7 @@ export default class SensorInterpreterV1 extends AInterpreter {
       if (this.firstAddition) {
 
         //[what, URL fo LDES,environment]
-        this.interpreterParent.giveSubjects(['zones', 'https://production.crowdscan.be/' + this.route, environment]);
+        this.interpreterParent.giveSubjects(['zones', this.config['entrypoint'] + this.route, environment]);
         this.firstAddition = false;
       }
 

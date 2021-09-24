@@ -39,7 +39,7 @@ export default class CatalogInterpreter extends AInterpreter {
       quad(
         namedNode('http://production.crowdscan.be/feed/public'),
         namedNode('http://www.w3.org/ns/dcat#dataset'),
-        blankNode('https://production.crowdscan.be/feed/public/dataset-observations')
+        namedNode('https://production.crowdscan.be/feed/public/dataset-observations')
       )
     );
 
@@ -87,7 +87,7 @@ export default class CatalogInterpreter extends AInterpreter {
 
     triples.push(
       quad(
-        namedNode('https://production.crowdscan.be/feed/public/dataset-obversatie$ons'),
+        namedNode('https://production.crowdscan.be/feed/public/dataset-obversations'),
         namedNode('http://purl.org/dc/terms/issued'),
         literal(tijd.toISOString(), namedNode('http://www.w3.org/2001/XMLSchema#dateTime'))
       )
@@ -184,7 +184,7 @@ export default class CatalogInterpreter extends AInterpreter {
       triples.push(
         quad(
           namedNode(data[1]),
-          namedNode('https://w3id.org/tree#shape'),
+          namedNode('https://w3id.org/tree#view'),
           namedNode(data[1] + '/1')
         )
       );
@@ -225,7 +225,7 @@ export default class CatalogInterpreter extends AInterpreter {
       triples.push(
         quad(
           namedNode(data[1]),
-          namedNode('https://w3id.org/tree#shape'),
+          namedNode('https://w3id.org/tree#view'),
           namedNode(data[1] + '/1')
         )
       );

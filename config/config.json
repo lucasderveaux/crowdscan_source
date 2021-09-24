@@ -2,6 +2,7 @@
     "app": {
         "port": 3000
     },
+    "entrypoint":"https://crowdscan.be",
     "observationsPerPage":200,
     "db": {
         "host": "C:/GitHub/Basic-LDES-Server-Examples/database.sqlite",

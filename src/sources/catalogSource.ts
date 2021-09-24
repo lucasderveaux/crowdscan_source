@@ -23,13 +23,12 @@ export class mySource extends crowdscanSource {
 
   async createPages(): Promise<void> {
     let metadata: RDF.Quad[] = [];
-    console.log('metadata wordt opgevraagd');
     this.interpreter.createMetadata([], metadata);
+
+    await this.importPageWithoutIndex(new Page(metadata, []));
 
     //aan de instance laten weten dat de zones mogen
     this.instance.createZonePages();
-
-    await this.importPageWithoutIndex(new Page(metadata, []));
   }
 
 
